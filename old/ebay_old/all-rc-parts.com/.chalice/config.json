@@ -1,0 +1,22 @@
+{
+    "version": "2.0",
+    "app_name": "all-rc-parts-com",
+    "stages": {
+        "dev": {
+            "api_gateway_stage": "api",
+            "environment_variables": {
+                "MEMCACHED_HOST": "localhost",
+                "MEMCACHED_PORT": "11211"
+            }
+        },
+        "prd": {
+            "api_gateway_stage": "prd",
+            "autogen_policy": false,
+            "iam_policy_file": "app-policy.json",
+            "environment_variables": {
+                "MEMCACHED_HOST": "lambda.l5yu3u.0001.usw2.cache.amazonaws.com",
+                "MEMCACHED_PORT": "11211"
+            }
+        }
+    }
+}

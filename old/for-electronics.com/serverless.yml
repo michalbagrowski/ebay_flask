@@ -1,0 +1,56 @@
+service: ebay
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: prd
+  region: us-west-1
+
+functions:
+  index:
+    handler: handler.index
+    events:
+      - http:
+          path: /
+          method: get
+  asd:
+    handler: handler.asd
+    events:
+      - http:
+          path: /asd
+          method: get
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+    dockerSsh: true
+
+resources:
+  Resources:
+    apiDomain:
+      Type: 'AWS::ApiGateway::DomainName'
+      Properties:
+        CertificateArn: "arn:aws:acm:us-east-1:206636293913:certificate/a74fd05e-0ae5-439f-a3e8-87da7f72e08f"
+        DomainName: "for-electronics.com"
+    basePathMapping:
+      Type: 'AWS::ApiGateway::BasePathMapping'
+      Properties:
+        BasePath: ""
+        DomainName: "for-electronics.com"
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Stage: "prd"
+
+    dnsRecord: #d16xx1eun37pfs.cloudfront.net
+      Type: 'AWS::Route53::RecordSet'
+      Properties:
+        HostedZoneId: "ZZKDTTCBRJYO4"
+        Name: for-electronics.com
+        AliasTarget:
+          DNSName: "d16xx1eun37pfs.cloudfront.net"
+          HostedZoneId: "Z2FDTNDATAQYW2"
+          EvaluateTargetHealth: False
+        Type: A

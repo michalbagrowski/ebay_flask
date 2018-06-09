@@ -1,0 +1,12 @@
+botocore==1.10.9
+ebaysdk
+lxml==4.1.0
+pymemcache
+boto3
+certifi
+chardet
+idna
+requests
+urllib3
+jinja2==2.9.6
+chalice

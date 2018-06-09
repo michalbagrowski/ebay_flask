@@ -1,0 +1,12 @@
+{
+  "prd": {
+    "api_handler_name": "per-elettronica-com-prd",
+    "api_handler_arn": "arn:aws:lambda:eu-central-1:206636293913:function:per-elettronica-com-prd",
+    "lambda_functions": {},
+    "backend": "api",
+    "chalice_version": "1.0.2",
+    "rest_api_id": "4gmslz6sma",
+    "api_gateway_stage": "prd",
+    "region": "eu-central-1"
+  }
+}

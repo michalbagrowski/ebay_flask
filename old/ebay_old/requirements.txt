@@ -1,0 +1,10 @@
+pymemcache
+boto3
+certifi
+chardet
+idna
+lxml
+requests
+urllib3
+jinja2==2.9.6
+chalice

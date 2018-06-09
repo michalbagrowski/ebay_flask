@@ -1,0 +1,12 @@
+{
+  "prd": {
+    "api_handler_name": "fur-die-elektronik-de-prd",
+    "api_handler_arn": "arn:aws:lambda:eu-central-1:206636293913:function:fur-die-elektronik-de-prd",
+    "lambda_functions": {},
+    "backend": "api",
+    "chalice_version": "1.0.2",
+    "rest_api_id": "dfda7ae1b1",
+    "api_gateway_stage": "prd",
+    "region": "eu-central-1"
+  }
+}

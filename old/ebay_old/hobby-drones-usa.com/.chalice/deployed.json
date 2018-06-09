@@ -1,0 +1,12 @@
+{
+  "prd": {
+    "api_handler_name": "hobby-drones-use-com-prd",
+    "api_handler_arn": "arn:aws:lambda:us-west-2:206636293913:function:hobby-drones-use-com-prd",
+    "lambda_functions": {},
+    "backend": "api",
+    "chalice_version": "1.0.2",
+    "rest_api_id": "x7a3mqf5ze",
+    "api_gateway_stage": "prd",
+    "region": "us-west-2"
+  }
+}

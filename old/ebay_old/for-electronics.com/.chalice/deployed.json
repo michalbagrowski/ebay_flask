@@ -1,0 +1,12 @@
+{
+  "prd": {
+    "api_handler_name": "for-electronicscom-prd",
+    "api_handler_arn": "arn:aws:lambda:us-west-2:206636293913:function:for-electronicscom-prd",
+    "lambda_functions": {},
+    "backend": "api",
+    "chalice_version": "1.0.2",
+    "rest_api_id": "48bdg6n1lc",
+    "api_gateway_stage": "prd",
+    "region": "us-west-2"
+  }
+}

@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 from api import common
 app = Flask(__name__)
 
@@ -15,7 +16,9 @@ def hello():
         "current_page": 0,
         "total_pages": 0,
         "items": index,
-        "in_rows": int(limit/rows)+1
+        "in_rows": int(limit/rows)+1,
+        "url_root": request.url_root
+
     }
 
     response = {

@@ -8,4 +8,4 @@ COPY . /usr/app
 
 ENV FLASK_APP=main.py
 ENV FLASK_ENV=development
-ENTRYPOINT ["flask","run","-h","0.0.0.0"]
+ENTRYPOINT ["flask","run","-h","0.0.0.0","-p","80"]

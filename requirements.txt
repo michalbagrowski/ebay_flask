@@ -1,2 +1,3 @@
 Flask
 ebaysdk
+boto3

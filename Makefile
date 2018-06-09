@@ -23,3 +23,7 @@ bump:
 	. .virtualenv/bin/activate; python scripts/bump.py
 
 .PHONY: version
+
+
+deploy:
+	. .virtualenv/bin/activate; python scripts/deploy.py

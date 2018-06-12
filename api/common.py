@@ -31,7 +31,7 @@ def index(limit, cat, app_id, page):
     return items.dict()
 
 
-def search(limit, rows, cat, query, app_id,title, description,queries,  page = 1, **kwargs):
+def search(limit, rows, cat, query, app_id,title, description,queries, campagin_id, google_id, page = 1, **kwargs):
     page = int(page)
 
     items = get_search_items(query, cat, app_id, limit, page)
@@ -56,6 +56,8 @@ def search(limit, rows, cat, query, app_id,title, description,queries,  page = 1
             "query": query,
             "queries": queries,
             "current_page": page,
+            "campagin_id": campagin_id,
+            "google_id": google_id,
             "total_pages": int(items["paginationOutput"]["totalPages"]),
             "limit": limit,
             "in_rows": in_rows

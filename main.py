@@ -11,6 +11,8 @@ config = {
         "limit": 66,
         "rows": 3,
         "cat": 179697,
+        "google_id": "UA-106144387-1",
+        "campagin_id": "5338177835",
         "app_id":  "MichaBag-ca6b-45b4-aab0-b1044c2fd03e",
         "title": "DRONY DJI, MAVIC, SPARK, PARROT",
         "description": "All frones for you",
@@ -51,8 +53,9 @@ def hello():
         "total_pages": 0,
         "items": common.index(config["limit"], config["cat"], config["app_id"],page=1),
         "in_rows": int(config["limit"]/config["rows"]),
-        "queries": config["queries"]
+        "queries": config["queries"],
     }
+    page_data.update(config)
 
     return template.render(**page_data)
 
@@ -62,7 +65,8 @@ def search(query, page):
     (config, template) = init(request.headers, "index.html")
     config["page"] = page
     config["query"] = query
-    page_data=  common.search(**config)
+
+    page_data =  common.search(**config)
     return template.render(**page_data)
 
 @app.route("/sitemap.xml")

@@ -1,6 +1,6 @@
 NAME="flask"
 VERSION=`cat VERSION`
-REGION="eu-west-1"
+REGION="us-east-1"
 AWS_ACCOUNT="206636293913"
 CLOUDFRONT_ID="E3V1JSQA1HZG36"
 run:
@@ -10,7 +10,7 @@ docker-build:
 	docker build -t flask:develop .
 
 docker-run:
-	docker run -it -p 5000:5000 flask:develop
+	docker run -it -p 5000:80 flask:develop
 
 docker-login:
 	@$(eval login := $(shell (aws  --profile michalbagrowski ecr get-login --no-include-email --region $(REGION))))
@@ -27,9 +27,10 @@ bump:
 .PHONY: version
 
 
-deploy:
-	. .virtualenv/bin/activate; python scripts/deploy.py
-
+deploy-us-east-1:
+	. .virtualenv/bin/activate; python scripts/deploy.py us-east-1
+deploy-eu-west-1:
+	. .virtualenv/bin/activate; python scripts/deploy.py eu-west-1
 invalidate:
 	. .virtualenv/bin/activate; python scripts/invalidate.py ${CLOUDFRONT_ID}
 

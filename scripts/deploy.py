@@ -1,10 +1,11 @@
 import boto3
+import sys
 
-region = "eu-west-1"
+region = sys.argv[1]
 profile = "michalbagrowski"
 service = "flask"
 cluster = "puppy"
-
+aws_account ="206636293913"
 SESSION = boto3.Session(profile_name = profile)
 client = SESSION.client('ecs', region_name = region)
 
@@ -13,21 +14,48 @@ version = open("VERSION","r").read()
 service_name = service + "-" + region
 cluster_name = cluster + "-" + region
 container_name = service + "-" + region
+config = {
+    "us-east-1": {
+        "subnets": [
+            "subnet-6432eb2d",
+            "subnet-9062db9c",
+            "subnet-8678e9e3",
+            "subnet-5b806d67",
+            "subnet-7ce20b51",
+            "subnet-2bcf2070"
+        ],
+        "securityGroups": [
+            "sg-d3f492a9"
+        ],
+        "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:206636293913:targetgroup/puppy-us-east-1/f7f51f7050177ad2"
+
+    },
+    "eu-west-1": {
+        "subnets": [
+            "subnet-0876107e",
+            "subnet-a07fcbf8",
+            "subnet-2883e94c"
+        ],
+        "securityGroups": [
+            "sg-56889f31"
+        ],
+        "targetGroupArn": "arn:aws:elasticloadbalancing:eu-west-1:206636293913:targetgroup/puppy-eu-west-1/309b7584ae8f6304"
+    }
+}
 
 task_definition = {
     "family": service_name,
     "containerDefinitions": [
         {
             "name": container_name,
-            "image": "206636293913.dkr.ecr.eu-west-1.amazonaws.com/flask-eu-west-1:"+version,
-
+            "image": aws_account+".dkr.ecr."+region+".amazonaws.com/flask-"+region+":"+version,
             "memory": 100,
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
-                    "awslogs-region": "eu-west-1",
-                    "awslogs-group": "puppy",
-                    "awslogs-stream-prefix": "/aaa"
+                    "awslogs-region": region,
+                    "awslogs-group": "puppy-"+region,
+                    "awslogs-stream-prefix": "fargate"
                 }
             },
             "portMappings": [{
@@ -41,7 +69,7 @@ task_definition = {
     "networkMode": "awsvpc",
     "cpu": "256",
     "memory": "512",
-    "executionRoleArn": "arn:aws:iam::206636293913:role/puppy-eu-west-1-execution-role"
+    "executionRoleArn": "arn:aws:iam::"+aws_account+":role/puppy-"+region+"-execution-role"
 }
 
 task_definition = client.register_task_definition(**task_definition)
@@ -54,20 +82,20 @@ service = {
     "launchType": "FARGATE",
     "networkConfiguration": {
         "awsvpcConfiguration": {
-            "subnets": ["subnet-0876107e","subnet-a07fcbf8","subnet-2883e94c"],
-            "securityGroups": ["sg-56889f31"],
+            "subnets": config[region]["subnets"],
+            "securityGroups": config[region]["securityGroups"],
             'assignPublicIp': "ENABLED"
         }
     },
     "loadBalancers" : [
         {
-            "targetGroupArn": "arn:aws:elasticloadbalancing:eu-west-1:206636293913:targetgroup/puppy-eu-west-1/309b7584ae8f6304",
+            "targetGroupArn": config[region]["targetGroupArn"],
             "containerName": service_name,
             "containerPort": 80
         }
     ]
 }
-
+print(service)
 service_update = {
     "cluster": cluster_name,
     "service": service_name,
@@ -75,8 +103,8 @@ service_update = {
     "taskDefinition": task_definition["taskDefinition"]["taskDefinitionArn"],
     "networkConfiguration": {
         "awsvpcConfiguration": {
-            "subnets": ["subnet-0876107e","subnet-a07fcbf8","subnet-2883e94c"],
-            "securityGroups": ["sg-56889f31"],
+            "subnets": config[region]["subnets"],
+            "securityGroups": config[region]["securityGroups"],
             'assignPublicIp': "ENABLED"
         }
 

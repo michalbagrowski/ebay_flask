@@ -7,7 +7,7 @@ from flask import Response
 
 app = Flask(__name__)
 default = "hobby-drones-usa.com"
-default = "all-rc-parts.com"
+#default = "all-rc-parts.com"
 config = {
     "hobby-drones-usa.com" : {
         "limit": 66,
@@ -112,3 +112,6 @@ def css_reset():
     resp = Response(template.render({}))
     resp.headers['Content-Type'] = 'text/css'
     return resp
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')

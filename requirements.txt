@@ -1,3 +1,4 @@
 Flask
 ebaysdk
 boto3
+uwsgi

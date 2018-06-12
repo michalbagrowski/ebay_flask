@@ -55,3 +55,7 @@ invalidate:
 	. .virtualenv/bin/activate; python scripts/invalidate.py E9P0MG0Y0ZJJO us-east-1 # for-electronics.com
 
 go: bump version deploy
+
+
+get_categories:
+	. .virtualenv/bin/activate; python scripts/get_categories.py

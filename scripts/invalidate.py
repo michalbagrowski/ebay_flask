@@ -1,7 +1,7 @@
 import boto3
 import sys
 import time
-region = "eu-west-1"
+region = sys.argv[2]
 profile = "michalbagrowski"
 service = "flask"
 cluster = "puppy"

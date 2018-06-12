@@ -6,8 +6,8 @@ from flask import Flask, make_response
 from flask import Response
 
 app = Flask(__name__)
-default = "hobby-drones-usa.com"
-#default = "all-rc-parts.com"
+#default = "hobby-drones-usa.com"
+default = "all-rc-parts.com"
 config = {
     "hobby-drones-usa.com" : {
         "limit": 66,
@@ -38,8 +38,8 @@ config = {
         "limit": 66,
         "rows": 3,
         "cat": 2562,
-        "google_id": "-",
-        "campagin_id": "-",
+        "google_id": "UA-120723509-1",
+        "campagin_id": "5338182915",
         "app_id":  "MichaBag-ca6b-45b4-aab0-b1044c2fd03e",
         "title": "RC Parts",
         "description": "RC Parts",
@@ -80,6 +80,9 @@ def hello():
 
     return template.render(**page_data)
 
+@app.route("/google25ec626b770b47f2.html")
+def google():
+    return "google-site-verification: google25ec626b770b47f2.html"
 
 @app.route("/search/<query>/<page>")
 def search(query, page):

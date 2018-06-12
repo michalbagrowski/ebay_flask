@@ -48,6 +48,7 @@ deploy-eu-west-1:
 	. .virtualenv/bin/activate; python scripts/deploy.py eu-west-1
 
 invalidate:
-	. .virtualenv/bin/activate; python scripts/invalidate.py ${CLOUDFRONT_ID}
+	. .virtualenv/bin/activate; python scripts/invalidate.py E2A3VCVZC8QIII us-east-1
+	. .virtualenv/bin/activate; python scripts/invalidate.py E1MCQ9AKXB7XP1 us-east-1
 
 go: bump version invalidate

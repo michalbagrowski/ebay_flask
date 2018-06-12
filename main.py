@@ -6,9 +6,26 @@ from flask import Flask, make_response
 from flask import Response
 
 app = Flask(__name__)
-#default = "hobby-drones-usa.com"
+default = "hobby-drones-usa.com"
 default = "all-rc-parts.com"
+default = "fur-die-elektronik.de"
+
 config = {
+    "fur-die-elektronik.de": {
+        "limit": 66,
+        "rows": 3,
+        "cat": 92074,
+        "google_id": "UA-120816592-1",
+        "campagin_id": "5338325667",
+        "app_id":  "MichaBag-ca6b-45b4-aab0-b1044c2fd03e",
+        "title": "-",
+        "description": "-",
+        "queries": [
+            "TV"
+        ],
+        "domain": "fur-die-elektronik.de",
+        "site_id": "EBAY-DE"
+    },
     "hobby-drones-usa.com" : {
         "limit": 66,
         "rows": 3,
@@ -80,9 +97,17 @@ def hello():
 
     return template.render(**page_data)
 
+@app.route("/google3830beaa9b83b405.html")
+def google_1():
+    return "google-site-verification: google3830beaa9b83b405.html"
+
 @app.route("/google25ec626b770b47f2.html")
-def google():
+def google_2():
     return "google-site-verification: google25ec626b770b47f2.html"
+
+@app.route("/ping")
+def ping():
+    return "ping"
 
 @app.route("/search/<query>/<page>")
 def search(query, page):

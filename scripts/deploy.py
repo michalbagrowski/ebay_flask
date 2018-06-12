@@ -77,7 +77,7 @@ task_definition = client.register_task_definition(**task_definition)
 service = {
     "cluster": cluster_name,
     "serviceName": service_name,
-    "desiredCount": 1,
+    "desiredCount": 2,
     "taskDefinition": task_definition["taskDefinition"]["taskDefinitionArn"],
     "launchType": "FARGATE",
     "networkConfiguration": {
@@ -95,11 +95,11 @@ service = {
         }
     ]
 }
-print(service)
+
 service_update = {
     "cluster": cluster_name,
     "service": service_name,
-    "desiredCount": 1,
+    "desiredCount": 2,
     "taskDefinition": task_definition["taskDefinition"]["taskDefinitionArn"],
     "networkConfiguration": {
         "awsvpcConfiguration": {

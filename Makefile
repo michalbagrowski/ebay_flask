@@ -48,7 +48,10 @@ deploy-eu-west-1:
 	. .virtualenv/bin/activate; python scripts/deploy.py eu-west-1
 
 invalidate:
-	. .virtualenv/bin/activate; python scripts/invalidate.py E2A3VCVZC8QIII us-east-1
-	. .virtualenv/bin/activate; python scripts/invalidate.py E1MCQ9AKXB7XP1 us-east-1
+	. .virtualenv/bin/activate; python scripts/invalidate.py E2A3VCVZC8QIII us-east-1 # all-rc-parts.com
+	. .virtualenv/bin/activate; python scripts/invalidate.py E1MCQ9AKXB7XP1 us-east-1 # hobby-drones-usa.com
+	. .virtualenv/bin/activate; python scripts/invalidate.py E3R06HTNICOHSC us-east-1 # all-die-electronic.de
+	. .virtualenv/bin/activate; python scripts/invalidate.py ESIWINZ3BFLHG us-east-1 # per-elettronica.com
+	. .virtualenv/bin/activate; python scripts/invalidate.py E9P0MG0Y0ZJJO us-east-1 # for-electronics.com
 
-go: bump version invalidate
+go: bump version deploy

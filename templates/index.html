@@ -5,28 +5,17 @@
     <script type="text/javascript">window._epn = {campaign:5338177835};</script><script src="https://epnt.ebay.com/static/epn-smart-tools.js"></script>
     <link rel="stylesheet" type="text/css" href="/reset.css">
     <link rel="stylesheet" type="text/css" href="/main.css">
+
     <title>{{ title }}</title>
     <meta name="description" content="{{ description }}" />
     <meta name="keywords" content="{{ keywords }}" />
   </head>
   <body>
-    {{ url_root }}
     <div id="searches">
       <ul>
-          <li><a href="/search/drones/1">Drones</a></li>
-          <li><a href="/search/battery/1">Battery</a></li>
-          <li><a href="/search/propeller/1">Propellers</a></li>
-          <li><a href="/search/{{ "DJI Mavic Pro" | urlencode }}/1">DJI Mavic Pro</a></li>
-          <li><a href="/search/{{ "DJI Spark" | urlencode }}/1">DJI Spark</a></li>
-          <li><a href="/search/{{ "Syma" | urlencode }}/1">Syma</a></li>
-      </ul>
-
-      <ul>
-        <li><a href="/search/DJI/1">DJI</a></li>
-        <li><a href="/search/Parrot/1">Parrot</a></li>
-        <li><a href="/search/{{ "3d Robotics" | urlencode }}/1">3d Robotics</a></li>
-        <li><a href="/search/GoPro/1">GoPro</a></li>
-        <li><a href="/search/Hubsan/1">Hubsan</a></li>
+        {% for q in queries %}
+          <li><a href="/search/{{ q | urlencode }}/1">{{ q }} </a></li>
+        {% endfor %}
       </ul>
 
       <form onsubmit="window.location = '/search/' + search.value+ '/1'; return false;">

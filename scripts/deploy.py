@@ -8,6 +8,8 @@ cluster = "puppy"
 SESSION = boto3.Session(profile_name = profile)
 client = SESSION.client('ecs', region_name = region)
 
+version = open("VERSION","r").read()
+
 service_name = service + "-" + region
 cluster_name = cluster + "-" + region
 container_name = service + "-" + region
@@ -17,10 +19,17 @@ task_definition = {
     "containerDefinitions": [
         {
             "name": container_name,
-            "image": "206636293913.dkr.ecr.eu-west-1.amazonaws.com/flask-eu-west-1:0.0.5",
+            "image": "206636293913.dkr.ecr.eu-west-1.amazonaws.com/flask-eu-west-1:"+version,
 
             "memory": 100,
-
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-region": "eu-west-1",
+                    "awslogs-group": "puppy",
+                    "awslogs-stream-prefix": "/aaa"
+                }
+            },
             "portMappings": [{
                 "containerPort": 80,
                 "hostPort": 80,

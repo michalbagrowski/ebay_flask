@@ -16,8 +16,8 @@ def get_template(template):
     return env.get_template(template)
 
 
-def index(limit, cat, app_id, page):
-    api = init_finding_api(app_id)
+def index(limit, cat, app_id, site_id, page, **kwargs):
+    api = init_finding_api(app_id, site_id)
     callData = {
         "categoryId": cat,
         "outputSelector": ["GalleryInfo","PictureURLLarge"],
@@ -31,10 +31,10 @@ def index(limit, cat, app_id, page):
     return items.dict()
 
 
-def search(limit, rows, cat, query, app_id,title, description,queries, campagin_id, google_id, page = 1, **kwargs):
+def search(limit, rows, cat, query, app_id,site_id,title, description,queries, campagin_id, google_id, page = 1, **kwargs):
     page = int(page)
 
-    items = get_search_items(query, cat, app_id, limit, page)
+    items = get_search_items(query, cat, app_id,site_id, limit, page)
 
     keywords = []
     in_rows=  0
@@ -64,22 +64,17 @@ def search(limit, rows, cat, query, app_id,title, description,queries, campagin_
         }
 
 
-def get_search_items(query, cat, app_id, limit = 10, page = 1):
+def get_search_items(query, cat, app_id,site_id, limit = 10, page = 1):
     key_name = "search_"+ str(base64.b64encode(query.encode('ascii'))) + "_query_"+ str(cat) + "_" + str(limit) + "_" + str(page)
-    api = Finding(
-    domain = 'svcs.ebay.com',
-        appid=app_id,
-        config_file=None,
-        siteid="EBAY-US"
-)
+    api = init_finding_api(app_id, site_id)
 
     callData = {
         "categoryId": cat,
         "outputSelector": ["GalleryInfo","PictureURLLarge"],
-    "paginationInput": {
-        "entriesPerPage": limit,
-        "pageNumber": page
-    },
+        "paginationInput": {
+            "entriesPerPage": limit,
+            "pageNumber": page
+        },
         "keywords": urllib.request.unquote(query)
 
     }
@@ -119,13 +114,13 @@ def get_keywords(items):
     return keywords
 
 
-def init_finding_api(app_id):
+def init_finding_api(app_id, site_id):
 
     find_api = Finding(
         domain = 'svcs.ebay.com',
         appid=app_id,
         config_file=None,
-        siteid="EBAY-US"
+        siteid=site_id
     )
 
     return find_api

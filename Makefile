@@ -30,5 +30,7 @@ bump:
 deploy:
 	. .virtualenv/bin/activate; python scripts/deploy.py
 
-invaludate:
+invalidate:
 	. .virtualenv/bin/activate; python scripts/invalidate.py ${CLOUDFRONT_ID}
+
+go: bump version invalidate

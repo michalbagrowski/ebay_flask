@@ -6,8 +6,10 @@ from flask import Flask, make_response
 from flask import Response
 
 app = Flask(__name__)
+default = "hobby-drones-usa.com"
+default = "all-rc-parts.com"
 config = {
-    "localhost:5000" : {
+    "hobby-drones-usa.com" : {
         "limit": 66,
         "rows": 3,
         "cat": 179697,
@@ -28,18 +30,37 @@ config = {
             "GoPro",
             "Husban"
         ],
-        "domain": "hobby-drones-usa.com"
+        "domain": "hobby-drones-usa.com",
+        "site_id": "EBAY-US"
+    },
 
+    "all-rc-parts.com" : {
+        "limit": 66,
+        "rows": 3,
+        "cat": 2562,
+        "google_id": "-",
+        "campagin_id": "-",
+        "app_id":  "MichaBag-ca6b-45b4-aab0-b1044c2fd03e",
+        "title": "RC Parts",
+        "description": "RC Parts",
+        "queries": [
+            "HPI",
+            "HSP",
+            "Maverics Strada",
+            "Traxxas"
+        ],
+        "domain": "all-rc-parts.com",
+        "site_id": "EBAY-US"
     }
 }
 
 
 def get_config(headers):
-    global config
+    global config, default
     if headers["host"] in config:
         return config[headers["host"]]
     else:
-        return config["localhost:5000"]
+        return config[default]
 
 def init(headers, template):
     return (get_config(headers), common.get_template(template))
@@ -51,7 +72,7 @@ def hello():
     page_data = {
         "current_page": 0,
         "total_pages": 0,
-        "items": common.index(config["limit"], config["cat"], config["app_id"],page=1),
+        "items": common.index(**config, page=1),
         "in_rows": int(config["limit"]/config["rows"]),
         "queries": config["queries"],
     }

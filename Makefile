@@ -20,7 +20,7 @@ docker-login-us-east-1:
 	@${login}
 
 docker-login-eu-west-1:
-	@$(eval login := $(shell (aws  --profile michalbagrowski ecr get-login --no-include-email --region us-east-1)))
+	@$(eval login := $(shell (aws  --profile michalbagrowski ecr get-login --no-include-email --region eu-west-1)))
 	@${login}
 
 version: version-us-east-1 version-eu-west-1
@@ -54,7 +54,7 @@ invalidate:
 	. .virtualenv/bin/activate; python scripts/invalidate.py ESIWINZ3BFLHG us-east-1 # per-elettronica.com
 	. .virtualenv/bin/activate; python scripts/invalidate.py E9P0MG0Y0ZJJO us-east-1 # for-electronics.com
 
-go: bump version deploy
+go: bump docker-login version deploy
 
 
 get_categories:

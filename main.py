@@ -17,8 +17,8 @@ def init(headers, template):
     #default = "hobby-drones-usa.com"
     #default = "all-rc-parts.com"
     #default = "fur-die-elektronik.de"
-    default = "for-electronics.com"
-    #default = "per-elettronica.com"
+    #default = "for-electronics.com"
+    default = "per-elettronica.com"
 
     config = {
         "default": {
@@ -31,7 +31,7 @@ def init(headers, template):
             "title": "-",
             "description": "-",
         },
-        "a:5000":{
+        "per-elettronica.com":{
             "categories_enabled": True,
             "cat": 12576,
             "campagin_id":"5338326020",
@@ -56,7 +56,7 @@ def init(headers, template):
             "categories_enabled": True,
             "main_name": "elektronik"
         },
-        "b:5000" : {
+        "hobby-drones-usa.com" : {
             "cat": 179697,
             "google_id": "UA-106144387-1",
             "campagin_id": "5338177835",
@@ -106,42 +106,55 @@ def get_config(config, default, headers):
         return fill_default(config["default"], config[headers["host"]])
     else:
         return fill_default(config["default"], config[default])
+import sys, traceback
 
 
 @app.route("/")
 def index():
-    (config, template) = init(request.headers, "index.html")
-    config["page"] = 1
-    config["category"] = str(config["cat"])+"/"+config["main_name"]
-    page_data = common.call(common.index, config)
-
-    return template.render(**page_data)
+    output = ""
+    try:
+        (config, template) = init(request.headers, "index.html")
+        config["page"] = 1
+        config["category"] = str(config["cat"])+"/"+config["main_name"]
+        page_data = common.call(common.index, config)
+        output = template.render(**page_data)
+    except:
+        print("TRACEERROR: "+traceback.format_exc().replace("\n",""))
+    return output
 
 @app.route("/search/<query>/<page>")
 def search(query, page):
-    (config, template) = init(request.headers, "index.html")
+    output = ""
+    try:
+        (config, template) = init(request.headers, "index.html")
 
-    config["page"] = page
-    config["query"] = query
+        config["page"] = page
+        config["query"] = query
 
-    page_data = common.call(common.search, config)
-
-    return template.render(**page_data)
+        page_data = common.call(common.search, config)
+        output = template.render(**page_data)
+    except:
+        print("TRACEERROR: "+traceback.format_exc().replace("\n",""))
+    return output
 
 @app.route("/category/<cat_id>/<name>/<page>")
 def category(cat_id, name, page):
-    (config, template) = init(request.headers, "index.html")
+    output = ""
+    try:
+        (config, template) = init(request.headers, "index.html")
 
+        config["cat"] = cat_id
+        config["page"] = page
 
-    config["cat"] = cat_id
-    config["page"] = page
-
-    page_data = common.call(common.index, config)
-    up = {
-        "category": cat_id+"/" +name
-    }
-    page_data.update(up)
-    return template.render(**page_data)
+        page_data = common.call(common.index, config)
+        up = {
+            "category": cat_id+"/" +name
+        }
+        page_data.update(up)
+        output = template.render(**page_data)
+    except:
+        print("TRACEERROR: "+traceback.format_exc().replace("\n",""))
+    return output
 
 @app.route("/sitemap.xml")
 def sitemap():

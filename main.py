@@ -119,7 +119,7 @@ def index():
         page_data = common.call(common.index, config)
         output = template.render(**page_data)
     except:
-        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": "+str(request.headers).replace("\n",""))
+        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": HEADERS: "+str(request.headers).replace("\n",""))
     return output
 
 @app.route("/search/<query>/<page>")
@@ -134,7 +134,7 @@ def search(query, page):
         page_data = common.call(common.search, config)
         output = template.render(**page_data)
     except:
-        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": "+str(request.headers).replace("\n",""))
+        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": HEADERS: "+str(request.headers).replace("\n",""))
     return output
 
 @app.route("/category/<cat_id>/<name>/<page>")
@@ -153,7 +153,7 @@ def category(cat_id, name, page):
         page_data.update(up)
         output = template.render(**page_data)
     except:
-        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": "+str(request.headers).replace("\n",""))
+        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": HEADERS: "+str(request.headers).replace("\n",""))
     return output
 
 @app.route("/sitemap.xml")

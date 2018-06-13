@@ -18,7 +18,7 @@ site_ids = {
 #from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
 def is_cache():
-    if "FLASK_ENV" in os.environ and os.environ["FLASK_ENV"] == "development":
+    if "FLASK_ENV" in os.environ and os.environ["FLASK_ENV"] == "developments":
         return True;
     return False
 cache = {}

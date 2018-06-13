@@ -13,10 +13,10 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
-default = "hobby-drones-usa.com"
+#default = "hobby-drones-usa.com"
 #default = "all-rc-parts.com"
 #default = "fur-die-elektronik.de"
-#default = "for-electronics.com"
+default = "for-electronics.com"
 #default = "per-elettronica.com"
 config = {
     "default": {
@@ -35,13 +35,16 @@ config = {
         "campagin_id":"5338326020",
         "site_id": "EBAY-IT",
         "domain": "per-elettronica.com",
+        "google_id": "UA-120797026-1"
     },
     "for-electronics.com":{
         "cat": 293,
         "site_id": "EBAY-US",
         "campagin_id": "5338326021",
         "categories_enabled": True,
-        "doman": "for-electronics.com"
+        "doman": "for-electronics.com",
+        "google_id": "UA-120798797-1"
+
     },
     "fur-die-elektronik.de": {
         "cat": 92074,
@@ -176,6 +179,7 @@ def css_reset():
     resp.headers['Content-Type'] = 'text/css'
     return resp
 
+
 @app.route("/google3830beaa9b83b405.html")
 def google_1():
     return "google-site-verification: google3830beaa9b83b405.html"
@@ -183,6 +187,14 @@ def google_1():
 @app.route("/google25ec626b770b47f2.html")
 def google_2():
     return "google-site-verification: google25ec626b770b47f2.html"
+
+@app.route("/google62d0c1e2b6b1a5ea.html")
+def google_3():
+    return "google-site-verification: google62d0c1e2b6b1a5ea.html"
+
+@app.route("/google62d0c1e2b6b1a5ea.html")
+def google_4():
+    return "google-site-verification: google62d0c1e2b6b1a5ea.html"
 
 @app.route("/ping")
 def ping():

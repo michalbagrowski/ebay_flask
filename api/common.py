@@ -47,7 +47,7 @@ def call(name, args):
     return name(**args)
 
 def get_db(db_name):
-    db = getattr(g, '_database', None)
+    db = getattr(g, '_database_'+db_name, None)
     if db is None:
         db = g._database = sqlite3.connect(db_name)
     return db

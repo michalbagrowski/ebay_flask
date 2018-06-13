@@ -14,4 +14,13 @@
   </url>
   {% endfor %}
   {%  endfor %}
+  {% for cat in categories %}
+  {% for i in range(10) %}
+  <url>
+    <loc>https://{{ domain }}/category/{{ cat.0 }}/{{cat.1|urlencode}}/{{i }}</loc>
+    <changefreq>daily</changefreq>
+  </url>
+  {% endfor %}
+  {%  endfor %}
+
 </urlset>

@@ -30,7 +30,7 @@
         {% endif %}
 
         {%  for page in pages %}
-        <li><a href="/{{ "category" if not query else "search" }}/{{ category if not query else query }}/{{ page }}" {% if current_page == page%}class="current" {% endif %}>{{ page }}</a></li>
+        <li><a href="/{{ "category" if not query else "search" }}/{{ category | urlencode if not query else query }}/{{ page }}" {% if current_page == page%}class="current" {% endif %}>{{ page }}</a></li>
         {% endfor %}
 
         {% if current_page < total_pages %}
@@ -42,7 +42,7 @@
     <div id="category-list">
       <ul>
         {% for cat in categories %}
-        <li><a href="/cat/{{cat.id}}/{{cat.name}}">{{ cat.name }}</a></li>
+        <li><a href="/category/{{cat.0}}/{{cat.1 | urlencode}}/1">{{ cat.1 }}</a></li>
         {% endfor %}
       </ul>
     </div>
@@ -65,7 +65,7 @@
             </a>
           </div>
         </div>
-        {% if loop.index % in_rows == 0 and loop.index != loop.length %}
+        {% if (in_rows == 0 or loop.index % in_rows == 0) and loop.index != loop.length %}
       </div>
       <div>
         {% endif %}

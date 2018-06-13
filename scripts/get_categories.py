@@ -19,7 +19,7 @@ def get_tranding_api(site_id = 0):
 
 def get_all_categories(site_id = "0"):
 
-    api = get_tranding_api();
+    api = get_tranding_api(site_id);
     callData = {
         'DetailLevel': 'ReturnAll'
     }

@@ -11,6 +11,13 @@ div#category-list {
     float: left;
     padding-left: 1%;
 }
+div#category-list ul{
+    width: 100px;
+}
+div#category-list ul li{
+    text-align: left;
+    padding: 3px
+}
 div#auction-list  div {
     width: 26%;
     float: left;

@@ -4,6 +4,15 @@ import urllib
 import operator
 import os
 import hashlib
+import sqlite3
+from flask import g
+site_ids = {
+    "EBAY-US": 0,
+    "EBAY-DE": 77,
+    "EBAY-IT": 101
+}
+
+
 #import sqlli
 #from ebay_lib import func
 #from ebaysdk.trading import Connection as Trading
@@ -36,17 +45,41 @@ def call(name, args):
         return cache[key_name]
 
     return name(**args)
-def getCategories(categories_enabled = False):
+
+def get_db(db_name):
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(db_name)
+    return db
+
+def getCategories(categories_enabled, site_id, parent):
+    global site_ids
     if categories_enabled:
-        return [{"id":1,"name":"test"}]
+        db_name = 'cats/cats_'+str(site_ids[site_id])+'.db'
+        conn = get_db(db_name)
+        c = conn.cursor()
+        c.execute("SELECT * FROM categories where site_id = ? and parent = ?", (
+            site_ids[site_id],
+            parent
+        ))
+        a = c.fetchall()
+        return a
     else:
-        return False
+        return []
 
-
-
+def getDefaultPageData():
+    page_data = {
+        "current_page":0,
+        "total_pages":0,
+        "items": {"searchResult":[]
+        }
+    }
+    return page_data
 def index(limit, rows, queries, cat, app_id, site_id, page, **kwargs):
-    api = init_finding_api(app_id, site_id)
 
+    page = int(page)
+    api = init_finding_api(app_id, site_id)
+    page_data = getDefaultPageData()
     callData = {
         "categoryId": cat,
         "outputSelector": ["GalleryInfo","PictureURLLarge"],
@@ -56,22 +89,25 @@ def index(limit, rows, queries, cat, app_id, site_id, page, **kwargs):
         }
     }
 
-    items = api.execute('findItemsByCategory', callData)
+    items = api.execute('findItemsByCategory', callData).dict()
 
-    page_data = {
-        "current_page": 0,
-        "total_pages": 0,
-        "items": items.dict(),
-        "in_rows": int(limit/rows),
-        "queries": queries,
-        "categories": getCategories(kwargs["categories_enabled"])
-    }
-    page_data.update(kwargs)
+    if "searchResult" in items and "item" in items["searchResult"]:
+        page_data = {
+            "current_page": page,
+            "items": items,
+            "in_rows": int(limit/rows),
+            "queries": queries,
+            "total_pages": int(items["paginationOutput"]["totalPages"]),
+            "categories": getCategories(kwargs["categories_enabled"], site_id, cat),
+            "pages": get_pages(page, int(items["paginationOutput"]["totalPages"])),
+        }
+
+        page_data.update(kwargs)
     return page_data
 
-def search(limit, rows, cat, query, app_id,site_id,title, description,queries,  page = 1, **kwargs):
+def search(limit, rows, cat, query, app_id,site_id,title, description, page = 1, **kwargs):
     page = int(page)
-
+    page_data = getDefaultPageData()
     items = get_search_items(query, cat, app_id,site_id, limit, page)
 
     keywords = []
@@ -84,7 +120,7 @@ def search(limit, rows, cat, query, app_id,site_id,title, description,queries,  
             in_rows = int(len(items["searchResult"]["item"])/rows)
 
         keywords = get_keywords(items["searchResult"]["item"])
-    page_data = {
+        page_data = {
             "keywords": ", ".join(keywords),
             "title": title,
             "description": description,
@@ -92,14 +128,12 @@ def search(limit, rows, cat, query, app_id,site_id,title, description,queries,  
             "items":  items,
             "pages": get_pages(page, int(items["paginationOutput"]["totalPages"])),
             "query": query,
-            "queries": queries,
             "current_page": page,
             "total_pages": int(items["paginationOutput"]["totalPages"]),
-            "limit": limit,
             "in_rows": in_rows,
-            "categories": getCategories(kwargs["categories_enabled"])
+            "categories": getCategories(kwargs["categories_enabled"], site_id, cat)
         }
-    page_data.update(kwargs)
+        page_data.update(kwargs)
     return page_data
 
 def get_search_items(query, cat, app_id,site_id, limit = 10, page = 1):
@@ -119,7 +153,9 @@ def get_search_items(query, cat, app_id,site_id, limit = 10, page = 1):
 
     items = api.execute('findItemsAdvanced', callData).dict()
     return items
+
 def get_pages(page, total):
+    page = int(page)
     pages = list(range(total))
 
     pages_first = pages[1:5];

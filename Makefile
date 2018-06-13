@@ -54,7 +54,7 @@ invalidate:
 	. .virtualenv/bin/activate; python scripts/invalidate.py ESIWINZ3BFLHG us-east-1 # per-elettronica.com
 	. .virtualenv/bin/activate; python scripts/invalidate.py E9P0MG0Y0ZJJO us-east-1 # for-electronics.com
 
-go: bump docker-login version deploy
+go: bump docker-login version deploy invalidate
 
 
 get_categories:

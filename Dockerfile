@@ -12,5 +12,6 @@ RUN rm /etc/nginx/sites-enabled/default
 COPY docker-deps/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 COPY docker-deps/ebay.conf /etc/nginx/sites-enabled/ebay.conf
 
-#ENTRYPOINT ["flask","run","-h","0.0.0.0","-p","80"]
+ENV FLASK_ENV=production
+
 ENTRYPOINT ["supervisord", "-n"]

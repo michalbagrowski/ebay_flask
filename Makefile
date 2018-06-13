@@ -4,7 +4,7 @@ VERSION=`cat VERSION`
 AWS_ACCOUNT="206636293913"
 CLOUDFRONT_ID="E3V1JSQA1HZG36"
 run:
-	. .virtualenv/bin/activate; FLASK_APP=main.py flask run
+	. .virtualenv/bin/activate; FLASK_ENV=development FLASK_APP=main.py flask run
 
 docker-build:
 	docker build -t flask:develop .

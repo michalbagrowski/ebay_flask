@@ -2,9 +2,26 @@ from jinja2 import Environment, FileSystemLoader,select_autoescape
 import base64
 import urllib
 import operator
+import os
+import hashlib
 #from ebay_lib import func
 #from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
+def is_cache():
+    if "FLASK_ENV" in os.environ and os.environ["FLASK_ENV"] == "development":
+        print("cached!!!!!")
+        return True;
+    return False
+cache = {}
+def give_results(data, name):
+    if is_cache():
+        if name in cache:
+            return cache[name]
+        else:
+            cache[name] = data
+            return cache[name]
+    return data
+
 def get_env():
     return Environment(
             loader=FileSystemLoader( 'templates'),
@@ -15,9 +32,19 @@ def get_template(template):
     env = get_env()
     return env.get_template(template)
 
+def call(name, args):
+    m = hashlib.md5()
+    m.update(args.__str__().encode())
+    md5 = m.hexdigest()
+    key_name = name.__name__+"_"+md5
 
-def index(limit, cat, app_id, site_id, page, **kwargs):
+    if is_cache() and key_name not in cache:
+        cache[key_name] = name(**args)
+    return cache[key_name]
+
+def index(limit, rows, queries, cat, app_id, site_id, page, **kwargs):
     api = init_finding_api(app_id, site_id)
+
     callData = {
         "categoryId": cat,
         "outputSelector": ["GalleryInfo","PictureURLLarge"],
@@ -28,8 +55,15 @@ def index(limit, cat, app_id, site_id, page, **kwargs):
     }
 
     items = api.execute('findItemsByCategory', callData)
-    return items.dict()
 
+    page_data = {
+        "current_page": 0,
+        "total_pages": 0,
+        "items": items.dict(),
+        "in_rows": int(limit/rows),
+        "queries": queries,
+    }
+    return page_data
 
 def search(limit, rows, cat, query, app_id,site_id,title, description,queries, campagin_id, google_id, page = 1, **kwargs):
     page = int(page)

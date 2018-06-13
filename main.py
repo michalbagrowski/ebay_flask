@@ -4,11 +4,12 @@ from api import common
 from functools import wraps
 from flask import Flask, make_response
 from flask import Response
+import os
 
 app = Flask(__name__)
 default = "hobby-drones-usa.com"
-default = "all-rc-parts.com"
-default = "fur-die-elektronik.de"
+#default = "all-rc-parts.com"
+#default = "fur-die-elektronik.de"
 
 config = {
     "fur-die-elektronik.de": {
@@ -83,49 +84,30 @@ def init(headers, template):
     return (get_config(headers), common.get_template(template))
 
 @app.route("/")
-def hello():
+def index():
     (config, template) = init(request.headers, "index.html")
 
-    page_data = {
-        "current_page": 0,
-        "total_pages": 0,
-        "items": common.index(**config, page=1),
-        "in_rows": int(config["limit"]/config["rows"]),
-        "queries": config["queries"],
-    }
-    page_data.update(config)
+    config["page"] = 1
 
+    page_data = common.call(common.index, config)
     return template.render(**page_data)
-
-@app.route("/google3830beaa9b83b405.html")
-def google_1():
-    return "google-site-verification: google3830beaa9b83b405.html"
-
-@app.route("/google25ec626b770b47f2.html")
-def google_2():
-    return "google-site-verification: google25ec626b770b47f2.html"
-
-@app.route("/ping")
-def ping():
-    return "ping"
 
 @app.route("/search/<query>/<page>")
 def search(query, page):
     (config, template) = init(request.headers, "index.html")
+
     config["page"] = page
     config["query"] = query
 
-    page_data =  common.search(**config)
+    page_data = common.call(common.search, config)
     return template.render(**page_data)
 
 @app.route("/sitemap.xml")
 def sitemap():
     (config, template) = init(request.headers, "sitemap.xml")
-
     resp = Response(template.render(**config))
     resp.headers['Content-Type'] = 'text/xml'
     return resp
-
 
 @app.route("/main.css")
 def css_main():
@@ -140,6 +122,18 @@ def css_reset():
     resp = Response(template.render({}))
     resp.headers['Content-Type'] = 'text/css'
     return resp
+
+@app.route("/google3830beaa9b83b405.html")
+def google_1():
+    return "google-site-verification: google3830beaa9b83b405.html"
+
+@app.route("/google25ec626b770b47f2.html")
+def google_2():
+    return "google-site-verification: google25ec626b770b47f2.html"
+
+@app.route("/ping")
+def ping():
+    return "ping"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

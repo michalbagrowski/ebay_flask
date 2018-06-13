@@ -4,12 +4,12 @@ import urllib
 import operator
 import os
 import hashlib
+#import sqlli
 #from ebay_lib import func
 #from ebaysdk.trading import Connection as Trading
 from ebaysdk.finding import Connection as Finding
 def is_cache():
     if "FLASK_ENV" in os.environ and os.environ["FLASK_ENV"] == "development":
-        print("cached!!!!!")
         return True;
     return False
 cache = {}
@@ -29,11 +29,20 @@ def call(name, args):
     m.update(args.__str__().encode())
     md5 = m.hexdigest()
     key_name = name.__name__+"_"+md5
-
-    if is_cache() and key_name not in cache:
+    if is_cache() and key_name in cache:
+        return cache[key_name]
+    elif is_cache() and key_name not in cache:
         cache[key_name] = name(**args)
         return cache[key_name]
+
     return name(**args)
+def getCategories(categories_enabled = False):
+    if categories_enabled:
+        return [{"id":1,"name":"test"}]
+    else:
+        return False
+
+
 
 def index(limit, rows, queries, cat, app_id, site_id, page, **kwargs):
     api = init_finding_api(app_id, site_id)
@@ -55,10 +64,12 @@ def index(limit, rows, queries, cat, app_id, site_id, page, **kwargs):
         "items": items.dict(),
         "in_rows": int(limit/rows),
         "queries": queries,
+        "categories": getCategories(kwargs["categories_enabled"])
     }
+    page_data.update(kwargs)
     return page_data
 
-def search(limit, rows, cat, query, app_id,site_id,title, description,queries, campagin_id, google_id, page = 1, **kwargs):
+def search(limit, rows, cat, query, app_id,site_id,title, description,queries,  page = 1, **kwargs):
     page = int(page)
 
     items = get_search_items(query, cat, app_id,site_id, limit, page)
@@ -73,7 +84,7 @@ def search(limit, rows, cat, query, app_id,site_id,title, description,queries, c
             in_rows = int(len(items["searchResult"]["item"])/rows)
 
         keywords = get_keywords(items["searchResult"]["item"])
-    return {
+    page_data = {
             "keywords": ", ".join(keywords),
             "title": title,
             "description": description,
@@ -83,13 +94,13 @@ def search(limit, rows, cat, query, app_id,site_id,title, description,queries, c
             "query": query,
             "queries": queries,
             "current_page": page,
-            "campagin_id": campagin_id,
-            "google_id": google_id,
             "total_pages": int(items["paginationOutput"]["totalPages"]),
             "limit": limit,
-            "in_rows": in_rows
+            "in_rows": in_rows,
+            "categories": getCategories(kwargs["categories_enabled"])
         }
-
+    page_data.update(kwargs)
+    return page_data
 
 def get_search_items(query, cat, app_id,site_id, limit = 10, page = 1):
     key_name = "search_"+ str(base64.b64encode(query.encode('ascii'))) + "_query_"+ str(cat) + "_" + str(limit) + "_" + str(page)

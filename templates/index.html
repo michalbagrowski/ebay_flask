@@ -38,6 +38,15 @@
         {% endif %}
       </ul>
     </div>
+    {% if categories %}
+    <div id="category-list">
+      <ul>
+        {% for cat in categories %}
+        <li><a href="/cat/{{cat.id}}/{{cat.name}}">{{ cat.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
     <div id="auction-list">
       <div>
         {% for item in items.searchResult.item %}

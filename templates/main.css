@@ -7,10 +7,15 @@ body {
 a {
     color: #7f7f7f;
 }
+div#category-list {
+    float: left;
+    padding-left: 1%;
+}
 div#auction-list  div {
-    width: 28%;
+    width: 26%;
     float: left;
     padding: 2%;
+    position: relative;
 }
 div#auction-list div div {
     background-color: #FFFFFF;

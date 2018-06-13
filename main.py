@@ -7,33 +7,33 @@ from flask import Response
 import os
 
 app = Flask(__name__)
-default = "hobby-drones-usa.com"
+#default = "hobby-drones-usa.com"
 #default = "all-rc-parts.com"
-#default = "fur-die-elektronik.de"
+default = "fur-die-elektronik.de"
 
 config = {
-    "fur-die-elektronik.de": {
+    "default": {
+        "categories_enabled": False,
         "limit": 66,
         "rows": 3,
+        "app_id":  "MichaBag-ca6b-45b4-aab0-b1044c2fd03e",
+    },
+    "fur-die-elektronik.de": {
         "cat": 92074,
         "google_id": "UA-120816592-1",
         "campagin_id": "5338325667",
-        "app_id":  "MichaBag-ca6b-45b4-aab0-b1044c2fd03e",
         "title": "-",
         "description": "-",
         "queries": [
             "TV"
         ],
         "domain": "fur-die-elektronik.de",
-        "site_id": "EBAY-DE"
+        "site_id": "EBAY-DE",
     },
     "hobby-drones-usa.com" : {
-        "limit": 66,
-        "rows": 3,
         "cat": 179697,
         "google_id": "UA-106144387-1",
         "campagin_id": "5338177835",
-        "app_id":  "MichaBag-ca6b-45b4-aab0-b1044c2fd03e",
         "title": "DRONY DJI, MAVIC, SPARK, PARROT",
         "description": "All frones for you",
         "queries": [
@@ -49,16 +49,12 @@ config = {
             "Husban"
         ],
         "domain": "hobby-drones-usa.com",
-        "site_id": "EBAY-US"
+        "site_id": "EBAY-US",
     },
 
     "all-rc-parts.com" : {
-        "limit": 66,
-        "rows": 3,
-        "cat": 2562,
         "google_id": "UA-120723509-1",
         "campagin_id": "5338182915",
-        "app_id":  "MichaBag-ca6b-45b4-aab0-b1044c2fd03e",
         "title": "RC Parts",
         "description": "RC Parts",
         "queries": [
@@ -71,14 +67,18 @@ config = {
         "site_id": "EBAY-US"
     }
 }
-
+def fill_default(configuration):
+    global config
+    c = config["default"]
+    c.update(configuration)
+    return c
 
 def get_config(headers):
     global config, default
     if headers["host"] in config:
-        return config[headers["host"]]
+        return fill_default(config[headers["host"]])
     else:
-        return config[default]
+        return fill_default(config[default])
 
 def init(headers, template):
     return (get_config(headers), common.get_template(template))
@@ -90,6 +90,7 @@ def index():
     config["page"] = 1
 
     page_data = common.call(common.index, config)
+
     return template.render(**page_data)
 
 @app.route("/search/<query>/<page>")

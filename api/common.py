@@ -13,14 +13,6 @@ def is_cache():
         return True;
     return False
 cache = {}
-def give_results(data, name):
-    if is_cache():
-        if name in cache:
-            return cache[name]
-        else:
-            cache[name] = data
-            return cache[name]
-    return data
 
 def get_env():
     return Environment(
@@ -40,7 +32,8 @@ def call(name, args):
 
     if is_cache() and key_name not in cache:
         cache[key_name] = name(**args)
-    return cache[key_name]
+        return cache[key_name]
+    return name(**args)
 
 def index(limit, rows, queries, cat, app_id, site_id, page, **kwargs):
     api = init_finding_api(app_id, site_id)

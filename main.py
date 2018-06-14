@@ -119,7 +119,7 @@ def index():
         page_data = common.call(common.index, config)
         output = template.render(**page_data)
     except:
-        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": HEADERS: "+str(request.headers).replace("\n",""))
+        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": TRACEHEADERS: "+str(request).replace("\n",""))
     return output
 
 @app.route("/search/<query>/<page>")
@@ -134,7 +134,7 @@ def search(query, page):
         page_data = common.call(common.search, config)
         output = template.render(**page_data)
     except:
-        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": HEADERS: "+str(request.headers).replace("\n",""))
+        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": TRACEHEADERS: "+str(request).replace("\n",""))
     return output
 
 @app.route("/category/<cat_id>/<name>/<page>")
@@ -153,27 +153,29 @@ def category(cat_id, name, page):
         page_data.update(up)
         output = template.render(**page_data)
     except:
-        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": HEADERS: "+str(request.headers).replace("\n",""))
+        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": TRACEHEADERS: "+str(request).replace("\n",""))
     return output
 
 @app.route("/sitemap.xml")
 def sitemap():
-    (config, template) = init(request.headers, "sitemap.xml")
+    output = ""
+    try:
+        (config, template) = init(request.headers, "sitemap.xml")
 
-    up ={
-        "categories": common.getCategories(
-            config["categories_enabled"], config["site_id"], config["cat"]
+        up ={
+            "categories": common.getCategories(
+                config["categories_enabled"], config["site_id"], config["cat"]
             )
-    }
+        }
 
-    config.update(up)
+        config.update(up)
 
-    resp = Response(template.render(**config))
-
-
-
-    resp.headers['Content-Type'] = 'text/xml'
-    return resp
+        resp = Response(template.render(**config))
+        resp.headers['Content-Type'] = 'text/xml'
+        output = resp
+    except:
+        print("TRACEERROR: "+traceback.format_exc().replace("\n","")+": TRACEHEADERS: "+str(request).replace("\n",""))
+    return output
 
 @app.route("/main.css")
 def css_main():
